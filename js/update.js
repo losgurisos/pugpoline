@@ -4,7 +4,7 @@ var beginningTraceInput = null;
 
 function update() { 
 
-	// User touch screen or click and has not started the trace yet.
+	// User touch or click the screen and has not started the trace yet.
 	if (game.input.activePointer.isDown && !beginningTraceInput){
 
 		// Save input until the user ends the trace.
