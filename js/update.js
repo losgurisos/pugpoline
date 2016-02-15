@@ -13,7 +13,7 @@ function update() {
 
     // User end the trace and the beginning's trace exists.
     } else  if (game.input.activePointer.isUp && beginningTraceInput){
-        
+
       	// Get the current input (the trace's ending).
         var endingTraceInput = new Phaser.Point(game.input.x, game.input.y);
         
@@ -34,27 +34,84 @@ function update() {
         var horizontalAdjust = (endingTraceInput.x - beginningTraceInput.x) /2;
         var verticalAdjust = (endingTraceInput.y - beginningTraceInput.y) /2;
 
-        // New trampoline instance.
-       	var trampoline = game.add.sprite(beginningTraceInput.x + horizontalAdjust, beginningTraceInput.y + verticalAdjust, 'trampoline');
+        // get first enabled trampoline.    
 
-       	// Scale it to beginning-ending distance (if rightToLeft true, vertical scale negative to vertically invert the sprite);
-        trampoline.scale.setTo(Phaser.Point.distance(beginningTraceInput, endingTraceInput)/100, rightToLeft ? -1 : 1);
+       	getFirstEnabledTrampoline( function(trampoline){
+       		
+       		if(trampoline !== null) {
 
-        // Enable trampoline physics.
-        game.physics.box2d.enable(trampoline);
+       		
 
-        // Set body as static.
-        trampoline.body.static = true;
+		       	// Scale it to beginning-ending distance (if rightToLeft true, vertical scale negative to vertically invert the sprite);
+		        trampoline.scale.setTo(Phaser.Point.distance(beginningTraceInput, endingTraceInput)/100, rightToLeft ? -1 : 1);
 
-        // Set angle (beginning-ending's angle).
-        trampoline.body.angle = angleInDegrees;
+		        
 
-        // Add it to trampoline group.
-        trampolineGroup.push(trampoline);
 
-        // Destroy the beginning of the trace's input.
-        beginningTraceInput = null;
+		        // setting trampoline new position
+		        trampoline.body.x = beginningTraceInput.x + horizontalAdjust;
+		       	trampoline.body.y = beginningTraceInput.y + verticalAdjust;
+
+
+
+
+
+		        // Make sprite visible
+		        trampoline.visible = true;
+
+		        // Set angle (beginning-ending's angle).
+		        trampoline.body.angle = angleInDegrees;
+
+			    // testing body
+			    trampoline.body.setRectangleFromSprite({width:Phaser.Point.distance(beginningTraceInput, endingTraceInput), height:1});
+
+		        // Add lifetime to the trampoline and disable to use it until lifetime
+		        trampoline.enableToUseIt = false;
+		   		trampolineLifeTimer.add(TRAMPOLINE_LIFETIME_IN_SECONDS * Phaser.Timer.SECOND, trampolineLifeTimerCallback, trampoline);
+		   	 	trampolineLifeTimer.start();
+
+		       
+	        }
+
+        });
+
+        // Destroy the trace beginning's input.
+    	beginningTraceInput = null;
 
     }
 
+}
+
+// The callback after the lifetime trampoline
+function trampolineLifeTimerCallback() {
+
+	// context: trampoline (this).
+
+	// remove body from game.
+	this.body.removeFromWorld();
+
+	// make sprite not visible.
+	this.visible = false;
+
+	// make it enable to use it again.
+	this.enableToUseIt = true;
+
+
+}
+
+
+// Get the first trampoline in trampoline group enabled to use it.
+function getFirstEnabledTrampoline(cb) {
+
+	for (var index in trampolineGroup){
+		if(trampolineGroup[index].enableToUseIt === true) {
+			cb(trampolineGroup[index]); 
+			return;
+		}
+	}
+
+	// All trampoline are in the screen.
+	cb(null); 
+	return;
+	
 }

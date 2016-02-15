@@ -4,3 +4,9 @@ var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'game_div', { p
 
 // trampolines group
 var trampolineGroup = [];
+
+// pugs group
+var pugsGroup = [];
+
+// trampolines life timer
+var trampolineLifeTimer;
