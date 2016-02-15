@@ -5,26 +5,24 @@ function create() {
 	game.physics.startSystem(Phaser.Physics.BOX2D);
 
 	// set game gravity.
-    game.physics.box2d.gravity.y = GAME_GRAVITY;
+	game.physics.box2d.gravity.y = GAME_GRAVITY;
 
-    // set game friction.
-    game.physics.box2d.friction = GAME_FRICTION;
+	// set game friction.
+	game.physics.box2d.friction = GAME_FRICTION;
 
-    //var _trampoline = game.add.sprite(0,-100, 'trampoline');
+	// create game trampolines 
+	for(var i = 0; i < MAX_TRAMPOLINE_QTY; i++) {
 
-    // create game trampolines 
-    for(var i = 0; i < MAX_TRAMPOLINE_QTY; i++) {
+		// Add the sprite.
+		var _trampoline = game.add.sprite(0,-100, 'trampoline');
 
-    	// Add the sprite.
-    	var _trampoline = game.add.sprite(0,-100, 'trampoline');
+		// Trampolines start as enable
+		_trampoline.enabledToUseIt = true;
 
-    	// Trampolines start as enable
-    	_trampoline.enableToUseIt = true;
+		// Enable trampoline BOX2D physics.
+		game.physics.box2d.enable(_trampoline);
 
-    	// Enable trampoline BOX2D physics.
-        game.physics.box2d.enable(_trampoline);
-
-        // Set body as static.
+		// Set body as static.
 		_trampoline.body.static = true;
 
 		// Starts without body.
@@ -32,14 +30,15 @@ function create() {
 
 		// Starts invisible.
 		_trampoline.visible = false;
-    	
-    	// Add it to trampoline array (group).
-    	trampolineGroup.push(_trampoline);
-    }
+		
+		// Add it to trampoline array (group).
+		trampolineGroup.push(_trampoline);
+	}
 
-    console.log(trampolineGroup);
-    
+	console.log(trampolineGroup);
+	
 
-    trampolineLifeTimer = game.time.create(false)
+	// Create the trampoline life timer object with autodestroy = false.
+	trampolineLifeTimer = game.time.create(false)
    
 }
