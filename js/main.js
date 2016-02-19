@@ -10,3 +10,6 @@ var pugsGroup = [];
 
 // trampolines life timer
 var trampolineLifeTimer;
+
+// trampolines
+var trampolinesBounce = [];
