@@ -1,7 +1,7 @@
 
 function render() { 
-	if (trampolineGroup.length > 0) {
-		for(var i = 0; i < trampolineGroup.length; i++)
-			game.debug.body(trampolineGroup[i]);
+	if (trampolinesGroup.trampolines.length > 0) {
+		for(var i = 0; i < trampolinesGroup.trampolines.length; i++)
+			game.debug.body(trampolinesGroup.trampolines[i]);
 	}
 }

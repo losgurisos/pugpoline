@@ -17,11 +17,14 @@ function update() {
 
 		// get first enabled trampoline.    
 
-		getFirstEnabledTrampoline( function(trampoline){
+		var trampoline = trampolinesGroup.getFirstEnabledTrampoline();
 			
-			if(trampoline !== null) {
+		if(trampoline !== null) {
 
-				/** New trampoline */
+			var trampolineSprite = trampoline.sprite;
+
+			if(trampolineSprite !== null) {
+
 
 				// Get the current input (the trace's ending).
 				var endingTraceInput = new Phaser.Point(game.input.x, game.input.y);
@@ -42,20 +45,20 @@ function update() {
 
 		
 				// Scale it to beginning-ending distance (if rightToLeft true, vertical scale negative to vertically invert the sprite);
-				trampoline.scale.setTo(Phaser.Point.distance(beginningTraceInput, endingTraceInput)/100, rightToLeft ? -1 : 1);
+				trampolineSprite.scale.setTo(Phaser.Point.distance(beginningTraceInput, endingTraceInput)/100, rightToLeft ? -1 : 1);
 
 				// Setting trampoline new position
-				trampoline.body.x = beginningTraceInput.x + horizontalAdjust;
-				trampoline.body.y = beginningTraceInput.y + verticalAdjust;
+				trampolineSprite.body.x = beginningTraceInput.x + horizontalAdjust;
+				trampolineSprite.body.y = beginningTraceInput.y + verticalAdjust;
 
 				// Make sprite visible
-				trampoline.visible = true;
+				trampolineSprite.visible = true;
 
 				// Set angle (beginning-ending's angle).
-				trampoline.body.angle = angleInDegrees;
+				trampolineSprite.body.angle = angleInDegrees;
 
 				// Testing body
-				trampoline.body.setRectangleFromSprite({width:Phaser.Point.distance(beginningTraceInput, endingTraceInput), height:1});
+				trampolineSprite.body.setRectangleFromSprite({width:Phaser.Point.distance(beginningTraceInput, endingTraceInput), height:1});
 
 				
 
@@ -66,10 +69,12 @@ function update() {
 				trampolineLifeTimer.add(TRAMPOLINE_LIFETIME_IN_SECONDS * Phaser.Timer.SECOND, trampolineLifeTimerCallback, trampoline);
 				trampolineLifeTimer.start();
 
-			   
 			}
 
-		});
+		   
+		}
+
+
 
 		// Destroy the trace beginning's input.
 		beginningTraceInput = null;
@@ -85,52 +90,26 @@ function update() {
    		}
 	}	
 
+
 }
 
 // The callback after the lifetime trampoline ends.
 function trampolineLifeTimerCallback() {
 
-	// context: trampoline (this).
-
-	// remove body from game.
-	this.body.removeFromWorld();
-
-	// make sprite not visible.
-	this.visible = false;
-
-	// make it enabled to use it again.
-	this.enabledToUseIt = true;
-
+	// remove trampoline (this) from screen and make it enabled to use it again.
+	this.remove();
 
 }
 
-
-// Get the first trampoline in trampoline group enabled to use it.
-function getFirstEnabledTrampoline(cb) {
-
-	for (var index in trampolineGroup){
-		if(trampolineGroup[index].enabledToUseIt === true) {
-			cb(trampolineGroup[index]); 
-			return;
-		}
-	}
-
-	// All trampoline are already in the screen.
-	cb(null); 
-	return;
-	
-}
 
 // Pug-trampoline collision callback
 function pugTrampolineContactCallback(body1, body2, fixture1, fixture2, begin, contact) {
 
+	console.log('hola');
+	var collissionPoint = new Phaser.Point(body1.x - trampolineBounceAnimations.down.width/2, body1.y);
 
-	trampolinesBounce[0].start();
-
-
+	this.startBounceAnimation(collissionPoint);
 	/*
-	var _collissionPoint = new Phaser.Point(body1.x - trampolineBounceAnimations.down.width/2, body1.y);
-	
 	trampolineBounceAnimations.down.x = _collissionPoint.x;
 	trampolineBounceAnimations.down.y = _collissionPoint.y;
 	trampolineBounceAnimations.down.visible = true;
@@ -144,7 +123,7 @@ function pugTrampolineContactCallback(body1, body2, fixture1, fixture2, begin, c
 		trampolineBounceAnimations.up.animations.currentAnim.onComplete.add(function() {
 			trampolineBounceAnimations.up.visible = false;
 		}, this);
-	}, this);
-	*/
+	}, this);*/
+	
 	
 }
