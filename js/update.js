@@ -37,19 +37,18 @@ function update() {
 				var angleInDegrees = 180 * angleInRadians / Math.PI - 180;
 
 				// Is a right-to-left trace?
-				var rightToLeft = beginningTraceInput.x > endingTraceInput.x;
+				var rightToLeft = trampoline.rightToLeft = beginningTraceInput.x > endingTraceInput.x;
 
 				// Horizontal and Vertical trampoline adjusting.
-				var horizontalAdjust = (endingTraceInput.x - beginningTraceInput.x) /2;
-				var verticalAdjust = (endingTraceInput.y - beginningTraceInput.y) /2;
-
+				
 		
 				// Scale it to beginning-ending distance (if rightToLeft true, vertical scale negative to vertically invert the sprite);
 				trampolineSprite.scale.setTo(Phaser.Point.distance(beginningTraceInput, endingTraceInput)/100, rightToLeft ? -1 : 1);
 
 				// Setting trampoline new position
-				trampolineSprite.body.x = beginningTraceInput.x + horizontalAdjust;
-				trampolineSprite.body.y = beginningTraceInput.y + verticalAdjust;
+				//trampoline.setPosition( new Phaser.Point( beginningTraceInput.x + horizontalAdjust, beginningTraceInput.y + verticalAdjust)) ;
+				trampoline.setPosition(  beginningTraceInput, endingTraceInput) ;
+
 
 				// Make sprite visible
 				trampolineSprite.visible = true;
@@ -57,8 +56,8 @@ function update() {
 				// Set angle (beginning-ending's angle).
 				trampolineSprite.body.angle = angleInDegrees;
 
-				// Testing body
-				trampolineSprite.body.setRectangleFromSprite({width:Phaser.Point.distance(beginningTraceInput, endingTraceInput), height:1});
+				// Set body as a line.
+				trampolineSprite.body.setRectangleFromSprite({width:Phaser.Point.distance(beginningTraceInput, endingTraceInput) * 0.8, height:1});
 
 				
 
@@ -81,7 +80,7 @@ function update() {
 
 	}
 
-	// reset pugs's y position if reach the bottom.
+	// reset pugs's Y position if reach the bottom.
 	for(var i = 0; i < pugsGroup.length; i++){
 		if (pugsGroup[i].body.y > 630){
             pugsGroup[i].body.x =  Math.random() * 800;
@@ -101,29 +100,3 @@ function trampolineLifeTimerCallback() {
 
 }
 
-
-// Pug-trampoline collision callback
-function pugTrampolineContactCallback(body1, body2, fixture1, fixture2, begin, contact) {
-
-	console.log('hola');
-	var collissionPoint = new Phaser.Point(body1.x - trampolineBounceAnimations.down.width/2, body1.y);
-
-	this.startBounceAnimation(collissionPoint);
-	/*
-	trampolineBounceAnimations.down.x = _collissionPoint.x;
-	trampolineBounceAnimations.down.y = _collissionPoint.y;
-	trampolineBounceAnimations.down.visible = true;
-	trampolineBounceAnimations.down.play('show');
-	trampolineBounceAnimations.down.animations.currentAnim.onComplete.add(function() {
-		trampolineBounceAnimations.down.visible = false;
-		trampolineBounceAnimations.up.x = _collissionPoint.x;
-		trampolineBounceAnimations.up.y = _collissionPoint.y;
-		trampolineBounceAnimations.up.visible = true;
-		trampolineBounceAnimations.up.play('show');
-		trampolineBounceAnimations.up.animations.currentAnim.onComplete.add(function() {
-			trampolineBounceAnimations.up.visible = false;
-		}, this);
-	}, this);*/
-	
-	
-}

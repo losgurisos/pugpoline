@@ -34,11 +34,21 @@ function Trampoline (maxPosibleHits) {
 	// group of animations when a pug hit this trampoline.
 	this.bounceAnimations = [];
 
+	this.bounceAnimationWidth;
+	this.bounceAnimationHeight;
+
+	// The trampoline trace starts from the right to the left.
+	this.rightToLeft;
+
 	// Trampoline's sprite phaser instance.
 	this.sprite;
 
 	// Trampolines start as enable
 	this.enabledToUseIt = true;
+
+
+	this.leftPoint;
+	this.rightPoint;
 
 
 	// Init data.
@@ -54,6 +64,8 @@ function Trampoline (maxPosibleHits) {
 
 	createUpAnimations();
 
+
+
 	this.remove = function() {
 	
 		// remove body from game.	
@@ -68,70 +80,96 @@ function Trampoline (maxPosibleHits) {
 
 	}
 
-	var currentPlayingAnimation = 0;
+	this.setPosition = function (beginningTracePoint, endingTracePoint) {
+
+		// Horizontal and Vertical trampoline adjusting.
+		var horizontalAdjust = (endingTracePoint.x - beginningTracePoint.x) /2;
+		var verticalAdjust = (endingTracePoint.y - beginningTracePoint.y) /2;
+
+		this.sprite.body.x = beginningTracePoint.x + horizontalAdjust;
+		this.sprite.body.y = beginningTracePoint.y + verticalAdjust;
+
+		if( beginningTracePoint.x < endingTracePoint.x) {
+			this.leftPoint = beginningTracePoint;
+			this.rightPoint = endingTracePoint;
+		} else {
+			this.leftPoint = endingTracePoint;
+			this.rightPoint = beginningTracePoint;
+		}
+
+	
+	}
+
 
 	this.startBounceAnimation = function (collissionPoint) {
 
-		var _available = getAvailableBounceAnims();
+		var anims = getAvailableBounceAnims();
 
-		anims = _available.anims;
 		anims.down.x = collissionPoint.x;
 		anims.down.y = collissionPoint.y;
+		
+		anims.down.angle = this.rightToLeft ? (this.sprite.angle) + 180  : this.sprite.angle;
 		anims.down.visible = true;
 		anims.down.play('show');
-		currentPlayingAnimation = _available.index;
 		
-
-		/*trampolineBounceAnimations.down.x = _collissionPoint.x;
-		trampolineBounceAnimations.down.y = _collissionPoint.y;
-		trampolineBounceAnimations.down.visible = true;
-		trampolineBounceAnimations.down.play('show');
-		trampolineBounceAnimations.down.animations.currentAnim.onComplete.add(function() {
-			trampolineBounceAnimations.down.visible = false;
-			trampolineBounceAnimations.up.x = _collissionPoint.x;
-			trampolineBounceAnimations.up.y = _collissionPoint.y;
-			trampolineBounceAnimations.up.visible = true;
-			trampolineBounceAnimations.up.play('show');
-			trampolineBounceAnimations.up.animations.currentAnim.onComplete.add(function() {
-				trampolineBounceAnimations.up.visible = false;
-			}, this);
-		}, this);*/
 	}
 
 	// Pug-trampoline collision callback
-	this.pugTrampolineContactCallback = function (body1, body2, fixture1, fixture2, begin, contact) {
+	this.pugTrampolineContactCallback = function (pug, trampoline, fixture1, fixture2, begin, contact) {
 
-		console.log('hola');
+		var _horizontalAnimAdjusting = this.bounceAnimationWidth/2;
+		var _verticalAnimAdjusting = this.bounceAnimationHeight/2;
+		
 
-		// Get collision Point.
-		var collissionPoint = new Phaser.Point(body1.x - this.bounceAnimations[0].down.width/2, body1.y);
+		// this.leftPoint.y - Math.tan((angle + 180) * Math.PI / 180) * (pug.x - this.leftPoint.x) - this.bounceAnimations[0].down.height/2 ;
+		
+
+		// -- Getting pug's collision point with trampoline body. --
+
+		// Getting vertical difference between left point and pug-trampoline's body colission (Thales) and subsctracted from trampoline leftPoint.y.
+		var _y = this.leftPoint.y - (pug.x - this.leftPoint.x) * (this.leftPoint.y - this.rightPoint.y) / (this.rightPoint.x - this.leftPoint.x);
+		// The horizontal collision is getted from the pug.
+		var _x = pug.x;
+
 
 		// Start bounce animation.
-		this.startBounceAnimation(collissionPoint)
+		this.startBounceAnimation(new Phaser.Point( _x , _y ));
+
 	}
 
-	function startUpAnimation (downAnim, anim) {
+	function onCompleteDownAnimationCallback (downAnim, anim) {
+
+		// Get index from this.
+		var index = this;
+
+		// Hide down animation.
+		downAnim.animations._anims.show.isFinished = true;
 		downAnim.visible = false;
 
-		upAnim = _this.bounceAnimations[currentPlayingAnimation].up;
+		// Get Up Animation.
+		upAnim = _this.bounceAnimations[index].up;
+
 
 		upAnim.x = downAnim.x;
 		upAnim.y = downAnim.y;
+		upAnim.angle = _this.rightToLeft ? _this.sprite.angle + 180  :_this.sprite.angle ;
 		upAnim.visible = true;
 		upAnim.play('show');
 
-		upAnim.animations._anims.show.onComplete.add(function(){
-			upAnim.visible = false 
-		})
+	}
 
+	function onCompleteUpAnimationCallback (upAnim) {
+		upAnim.animations._anims.show.isFinished = true;
+		upAnim.visible = false 
 	}
 
 	function getAvailableBounceAnims () {
 		var bounceAnimations = _this.bounceAnimations;
-
+		console.log(bounceAnimations);
 		for(var i = 0; i < bounceAnimations.length ; i++) {
-			if(bounceAnimations[i].up.animations._anims.show.isFinished === true){
-				return { anims: bounceAnimations[i], index: i};
+			// This is not working well. Fix later.
+			if(bounceAnimations[i].up.animations._anims.show.isFinished === true ){
+				return bounceAnimations[i];
 			}
 		}
 	}
@@ -168,11 +206,17 @@ function Trampoline (maxPosibleHits) {
 
 			console.log(animDownSprite.animations._anims.show.onComplete.add)
 			animDownSprite.animations._anims.show.isFinished = true;
-			animDownSprite.animations._anims.show.onComplete.add(startUpAnimation, 'asd');
+			animDownSprite.animations._anims.show.onComplete.add(onCompleteDownAnimationCallback, i);
 			animDownSprite.visible = false;
+			animDownSprite.anchor.x = 0.5;
+			animDownSprite.anchor.y = 0.2;
 
 			_this.bounceAnimations[i].down = animDownSprite;
 		}
+
+		_this.bounceAnimationWidth = _this.bounceAnimations[0].down.width;
+		_this.bounceAnimationHeight = _this.bounceAnimations[0].down.height;
+
 
 	}
 
@@ -186,7 +230,10 @@ function Trampoline (maxPosibleHits) {
 			var animUpSprite = game.add.sprite(150, 0, 'tramp_up');
 			animUpSprite.animations.add('show', [1,2,3,4,5,6]);
 			animUpSprite.animations._anims.show.isFinished = true;
+			animUpSprite.animations._anims.show.onComplete.add(onCompleteUpAnimationCallback, i);
 			animUpSprite.visible = false;
+			animUpSprite.anchor.x = 0.5;
+			animUpSprite.anchor.y = 0.8;
 
 			_this.bounceAnimations[i].up = animUpSprite;
 		}
