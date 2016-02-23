@@ -78,6 +78,7 @@ function update() {
 		// Destroy the trace beginning's input.
 		beginningTraceInput = null;
 
+
 	}
 
 	// reset pugs's Y position if reach the bottom.
@@ -88,6 +89,9 @@ function update() {
             pugsGroup[i].body.setZeroVelocity();
    		}
 	}	
+
+		//console.log(trampolinesGroup.trampolines[0].bounceAnimations[0].down.animations._anims.show.isFinished + ' - ' + trampolinesGroup.trampolines[0].bounceAnimations[0].up.animations._anims.show.isFinished )
+
 
 
 }

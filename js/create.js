@@ -21,7 +21,7 @@ function create() {
 	for(var i = 0; i < MAX_PUGS_QTY; i++) {
 
 		// Get the sprite.
-		var _pug = game.add.sprite(150, 0, 'pug');
+		var _pug = game.add.sprite(i*30, 0, 'pug');
 
 		// Enable pug BOX2D physics.
 		game.physics.box2d.enable(_pug);
