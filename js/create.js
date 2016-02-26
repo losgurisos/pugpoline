@@ -38,6 +38,7 @@ function create() {
 		// set pug-trampoline collision callbacks
 		for(var j = 0; j < trampolinesGroup.trampolines.length; j++){
 			var _trampoline = trampolinesGroup.trampolines[j];
+
 			_pug.body.setBodyContactCallback(_trampoline.sprite, _trampoline.pugTrampolineContactCallback, _trampoline);
 		}
 		

@@ -1,6 +1,7 @@
 
 /** GAME CLASSES */
 
+// Trampoline group Class.
 function TrampolinesGroup (trampolineQty, maxPugsQty) {
 
 	this.trampolines = [];
@@ -26,6 +27,7 @@ function TrampolinesGroup (trampolineQty, maxPugsQty) {
 
 }
 
+// Trampoline Class.
 function Trampoline (maxPosibleHits) {
 
 	var _this = this;
@@ -37,19 +39,21 @@ function Trampoline (maxPosibleHits) {
 	this.bounceAnimationWidth;
 	this.bounceAnimationHeight;
 
-	// The trampoline trace starts from the right to the left.
+	// The trampoline trace starts from the right to the left (Boolean).
 	this.rightToLeft;
 
-	// Trampoline's sprite phaser instance.
+	// Trampoline's sprite phaser instance (Phaser.Sprite).
 	this.sprite;
 
 	// Trampolines start as enable
 	this.enabledToUseIt = true;
 
-	// The lefter point of the trampoline.
+	// The lefter point of the trampoline (Phaser.Point).
 	this.leftPoint;
-	// The righter point of the trampoline.
+	// The righter point of the trampoline (Phaser.Point).
 	this.rightPoint;
+
+
 
 
 	/* Init data. */
@@ -126,14 +130,14 @@ function Trampoline (maxPosibleHits) {
 	}
 
 	// Start the bounce animation.
-	this.startBounceAnimation = function (collissionPoint) {
+	this.startBounceAnimation = function (collisionPoint) {
 
 		// Get anims from anims pool.
 		var anims = getAvailableBounceAnims();
 
 		// Set down anim position.
-		anims.down.x = collissionPoint.x;
-		anims.down.y = collissionPoint.y;
+		anims.down.x = collisionPoint.x;
+		anims.down.y = collisionPoint.y;
 		
 		// Set down anim angle.
 		anims.down.angle = this.rightToLeft ? (this.sprite.angle) + 180  : this.sprite.angle;
@@ -146,11 +150,18 @@ function Trampoline (maxPosibleHits) {
 		
 	}
 
+
 	// Pug-trampoline collision callback
 	this.pugTrampolineContactCallback = function (pug, trampoline, fixture1, fixture2, begin, contact) {
+			
 
 		// If  the collision is ending we dont need to start the animation again.
 		if(!begin) return;
+
+		if(pug.velocity.y < 0) return;
+
+
+
 
 		var _horizontalAnimAdjusting = this.bounceAnimationWidth/2;
 		var _verticalAnimAdjusting = this.bounceAnimationHeight/2;
@@ -161,7 +172,7 @@ function Trampoline (maxPosibleHits) {
 
 		// -- Getting pug's collision point with trampoline body. --
 
-		// Getting vertical difference between left point and pug-trampoline's body colission (Thales) and subsctracted from trampoline leftPoint.y.
+		// Getting vertical difference between left point and pug-trampoline's body collision (Thales) and subsctracted from trampoline leftPoint.y.
 		var _y = this.leftPoint.y - (pug.x - this.leftPoint.x) * (this.leftPoint.y - this.rightPoint.y) / (this.rightPoint.x - this.leftPoint.x);
 		// The horizontal collision is getted from the pug.
 		var _x = pug.x;

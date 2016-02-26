@@ -39,11 +39,15 @@ function update() {
 				// Is a right-to-left trace?
 				var rightToLeft = trampoline.rightToLeft = beginningTraceInput.x > endingTraceInput.x;
 
-				// Horizontal and Vertical trampoline adjusting.
+				// Get trace distance.
+				var _traceDistance = Phaser.Point.distance(beginningTraceInput, endingTraceInput);
+
+
+
 				
 		
 				// Scale it to beginning-ending distance (if rightToLeft true, vertical scale negative to vertically invert the sprite);
-				trampolineSprite.scale.setTo(Phaser.Point.distance(beginningTraceInput, endingTraceInput)/100, rightToLeft ? -1 : 1);
+				trampolineSprite.scale.setTo(_traceDistance/100, rightToLeft ? -1 : 1);
 
 				// Setting trampoline new position
 				//trampoline.setPosition( new Phaser.Point( beginningTraceInput.x + horizontalAdjust, beginningTraceInput.y + verticalAdjust)) ;
@@ -57,11 +61,9 @@ function update() {
 				trampolineSprite.body.angle = angleInDegrees;
 
 				// Set body as a line.
-				trampolineSprite.body.setRectangleFromSprite({width:Phaser.Point.distance(beginningTraceInput, endingTraceInput) * 0.8, height:1});
+				trampolineSprite.body.setRectangleFromSprite({width: _traceDistance - 50, height:1});
 
-				
-
-				// Disable to use it again until lifetime end callback
+				// Disable to use it until lifetime end callback
 				trampoline.enabledToUseIt = false;
 
 				// Add lifetime to the trampoline
@@ -83,14 +85,18 @@ function update() {
 
 	// reset pugs's Y position if reach the bottom.
 	for(var i = 0; i < pugsGroup.length; i++){
-		if (pugsGroup[i].body.y > 630){
-            pugsGroup[i].body.x =  Math.random() * 800;
-            pugsGroup[i].body.y = Math.random() * -200;
-            pugsGroup[i].body.setZeroVelocity();
-   		}
-	}	
 
-		//console.log(trampolinesGroup.trampolines[0].bounceAnimations[0].down.animations._anims.show.isFinished + ' - ' + trampolinesGroup.trampolines[0].bounceAnimations[0].up.animations._anims.show.isFinished )
+		var _pugBody = pugsGroup[i].body;
+
+		if (_pugBody.y > 630){
+           	_pugBody.x = Math.random() * 800;
+            _pugBody.y = Math.random() * -200;
+            _pugBody.setZeroVelocity();
+   		}
+
+   		// Avoid collision with trampolines when pug is going up.
+   		_pugBody.sensor = _pugBody.velocity.y < 0;
+	}	
 
 
 
