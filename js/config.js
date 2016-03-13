@@ -1,6 +1,9 @@
 
 /** CONFIGURATION */
 
+/* Debug mode */
+const DEBUG_MODE							= true;
+
 /* Game conf */
 const GAME_WIDTH 							= 800;
 const GAME_HEIGHT 							= 600;
@@ -15,3 +18,9 @@ const TRAMPOLINE_LIFETIME_IN_SECONDS		= 3;
 const MAX_PUGS_QTY							= 20;
 const PUGS_RESTITUTION						= 1.05;
 const PUGS_CIRCLE_BODY_SIZE					= 15;
+
+/* Goals */
+const GOALS_QTY                             = 3;
+
+
+const BACKGROUND_COLOR						= "#77DDEC";

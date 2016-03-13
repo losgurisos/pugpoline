@@ -1,8 +1,11 @@
 
-function create() { 
+function create() {
 
 	// Start BOX2D physics.
 	game.physics.startSystem(Phaser.Physics.BOX2D);
+
+	// Set stage background color.
+	game.stage.backgroundColor = BACKGROUND_COLOR;
 
 	// Set config gravity.
 	game.physics.box2d.gravity.y = GAME_GRAVITY;
@@ -10,10 +13,15 @@ function create() {
 	// Set config friction.
 	game.physics.box2d.friction = GAME_FRICTION;
 
-	// Set Trampolines 
+	// Get TrampolinesGroup instance.
 	trampolinesGroup = new TrampolinesGroup(MAX_TRAMPOLINE_QTY, MAX_PUGS_QTY);
 
 	console.log(trampolinesGroup);
+
+    // Get GoalsGroup instance.
+	goalsGroup = new GoalsGroup(GOALS_QTY);
+
+	console.log(goalsGroup);
 
 
 	// Pugs
@@ -32,16 +40,13 @@ function create() {
 		// Set pug restitution.
 		_pug.body.restitution = PUGS_RESTITUTION;
 
-		// Starts invisible.
-		//_pug.visible = false;
-
 		// set pug-trampoline collision callbacks
 		for(var j = 0; j < trampolinesGroup.trampolines.length; j++){
 			var _trampoline = trampolinesGroup.trampolines[j];
 
 			_pug.body.setBodyContactCallback(_trampoline.sprite, _trampoline.pugTrampolineContactCallback, _trampoline);
 		}
-		
+
 		// Add it to pugs array (group).
 		pugsGroup.push(_pug);
 
@@ -50,5 +55,5 @@ function create() {
 
 	// Create the trampoline life timer object with autodestroy = false.
 	trampolineLifeTimer = game.time.create(false)
-   
+
 }
