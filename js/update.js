@@ -42,10 +42,6 @@ function update() {
 				// Get trace distance.
 				var _traceDistance = Phaser.Point.distance(beginningTraceInput, endingTraceInput);
 
-
-
-				
-		
 				// Scale it to beginning-ending distance (if rightToLeft true, vertical scale negative to vertically invert the sprite);
 				trampolineSprite.scale.setTo(_traceDistance/100, rightToLeft ? -1 : 1);
 
@@ -62,6 +58,11 @@ function update() {
 
 				// Set body as a line.
 				trampolineSprite.body.setRectangleFromSprite({width: _traceDistance - 50, height:1});
+                trampoline.preContactSensor = trampolineSprite.body.addRectangle( _traceDistance - 50, 15,0,0);
+                trampoline.preContactSensor.SetSensor(true);
+                for(var i = 0; i < pugsGroup.length; i++){
+                    pugsGroup[i].body.setFixtureContactCallback(trampoline.preContactSensor, trampoline.preContactSensorCallback, this);
+                }
 
 				// Disable to use it until lifetime end callback
 				trampoline.enabledToUseIt = false;
@@ -95,10 +96,16 @@ function update() {
    		}
 
    		// Avoid collision with trampolines when pug is going up.
-   		_pugBody.sensor = _pugBody.velocity.y < 0;
+   		//_pugBody.sensor = _pugBody.velocity.y < 0;
+
 	}	
 
 
+
+}
+
+function preContactSensorCallback (pug,a,a,a,begin) {
+        pug.sensor = begin;
 
 }
 

@@ -25,8 +25,8 @@ function Trampoline (maxPosibleHits) {
 	// The righter point of the trampoline (Phaser.Point).
 	this.rightPoint;
 
-
-
+	// Pre collision fixture body
+	this.preContactSensor;
 
 	/* Init data. */
 
@@ -44,6 +44,13 @@ function Trampoline (maxPosibleHits) {
 
 	createUpAnimations();
 
+	// Precontact with pug callback
+	this.preContactSensorCallback = function(pug, trampoline, fixture1, fixture2, begin, contact){
+        if(begin)
+            pug.sensor = getVerticalPugCollisionOnTrampoline(pug.x) < pug.y;
+        else
+            pug.sensor = false;
+	}
 
 	// Hide trampoline from screen and make it usable again.
 	this.remove = function() {
@@ -60,7 +67,7 @@ function Trampoline (maxPosibleHits) {
 		// Hide all animations playing.
 		hideAnimations();
 
-
+		console.log(this.sprite.body);
 	}
 
 	// Hide all trampoline animations.
@@ -69,12 +76,9 @@ function Trampoline (maxPosibleHits) {
 		var _bounceAnimations = _this.bounceAnimations
 
 		for(var i = 0; i < _bounceAnimations.length; i++){
-
 			_bounceAnimations[i].down.visible = false;
 			_bounceAnimations[i].up.visible = false;
-
 		}
-
 	}
 
 
@@ -97,8 +101,6 @@ function Trampoline (maxPosibleHits) {
 			this.leftPoint = endingTracePoint;
 			this.rightPoint = beginningTracePoint;
 		}
-
-	
 	}
 
 	// Start the bounce animation.
@@ -119,45 +121,47 @@ function Trampoline (maxPosibleHits) {
 
 		// Play down anim.
 		anims.down.play('show');
-		
+	}
+	this.pugTrampolinePresolveCallback = function (pug, trampoline, fixture1, fixture2, begin, contact) {
+	console.log(fixture2)
+	    pug.sensor = true
+	}
+	this.pugTrampolinePostsolveCallback = function (pug, trampoline, fixture1, fixture2, begin, contact) {
+
 	}
 
+	function getVerticalPugCollisionOnTrampoline (pug_x) {
+		// Getting vertical difference between left point
+		// and pug-trampoline's body collision (Thales)
+		// and subsctracted from trampoline leftPoint.y.
+	    return _this.leftPoint.y - (pug_x - _this.leftPoint.x) * (_this.leftPoint.y - _this.rightPoint.y) / (_this.rightPoint.x - _this.leftPoint.x);
+	}
 
 	// Pug-trampoline collision callback
 	this.pugTrampolineContactCallback = function (pug, trampoline, fixture1, fixture2, begin, contact) {
-			
 
 		// If  the collision is ending we dont need to start the animation again.
 		if(!begin) return;
 
 		if(pug.velocity.y < 0) return;
 
-
-
-
 		var _horizontalAnimAdjusting = this.bounceAnimationWidth/2;
 		var _verticalAnimAdjusting = this.bounceAnimationHeight/2;
-		
 
 		// this.leftPoint.y - Math.tan((angle + 180) * Math.PI / 180) * (pug.x - this.leftPoint.x) - this.bounceAnimations[0].down.height/2 ;
-		
 
 		// -- Getting pug's collision point with trampoline body. --
 
-		// Getting vertical difference between left point and pug-trampoline's body collision (Thales) and subsctracted from trampoline leftPoint.y.
-		var _y = this.leftPoint.y - (pug.x - this.leftPoint.x) * (this.leftPoint.y - this.rightPoint.y) / (this.rightPoint.x - this.leftPoint.x);
+		var _y = getVerticalPugCollisionOnTrampoline(pug.x);
 		// The horizontal collision is getted from the pug.
 		var _x = pug.x;
 
-
 		// Start bounce animation from the collision point.
 		this.startBounceAnimation(new Phaser.Point( _x , _y ));
-
 	}
 
 	// Callback after down anim is complete.
 	function onCompleteDownAnimationCallback (downAnim, anim) {
-
 
 		/* Start the up anim */
 
@@ -182,7 +186,6 @@ function Trampoline (maxPosibleHits) {
 
 		// Play up anim.
 		upAnim.play('show');
-
 	}
 
 	// Callback after up anim is complete.
@@ -196,13 +199,10 @@ function Trampoline (maxPosibleHits) {
 		var bounceAnimations = _this.bounceAnimations;
 
 		for(var i = 0; i < bounceAnimations.length ; i++) {
-
 			// If the two, up and down anim are finished.
 			if(bounceAnimations[i].up.animations._anims.show.isFinished === true 
 				&& bounceAnimations[i].down.animations._anims.show.isFinished === true)
 					return bounceAnimations[i];
-			
-			
 		}
 		// For the doubts..
 		return bounceAnimations[0];
@@ -262,7 +262,6 @@ function Trampoline (maxPosibleHits) {
 		_this.bounceAnimationWidth = _this.bounceAnimations[0].down.width;
 		_this.bounceAnimationHeight = _this.bounceAnimations[0].down.height;
 
-
 	}
 
 	// Create up anims.
@@ -295,9 +294,6 @@ function Trampoline (maxPosibleHits) {
 			// Add it to custom anims pool.
 			_this.bounceAnimations[i].up = animUpSprite;
 		}
-
 	}
-
-
 }
 

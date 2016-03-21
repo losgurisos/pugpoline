@@ -16,6 +16,11 @@ function Goal (x, y , sprite) {
 
     }
 
+    this.pugGoalContactCallback = function(pug, goal, fixture1, fixture2, begin, contact) {
+        if(begin)
+            console.log('golón.')
+    }
+
     // Init goal phaser object.
     init.apply(this)
 

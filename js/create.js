@@ -18,10 +18,16 @@ function create() {
 
 	console.log(trampolinesGroup);
 
-    // Get GoalsGroup instance.
+	// Get GoalsGroup instance.
 	goalsGroup = new GoalsGroup(GOALS_QTY);
 
 	console.log(goalsGroup);
+
+	rightWall = game.add.sprite(GAME_WIDTH-SCREEN_OFFSET_RIGHT, SCREEN_OFFSET_UP ,null )
+	game.physics.box2d.enable(rightWall)
+	rightWall.body.static = true;
+	console.log(rightWall.body.setRectangle(30,GAME_HEIGHT,0,GAME_HEIGHT/2,0))
+	//rightWall.body.sprite.scale.setTo(1,GAME_HEIGHT /  rightWall.height) ;
 
 
 	// Pugs
@@ -29,7 +35,7 @@ function create() {
 	for(var i = 0; i < MAX_PUGS_QTY; i++) {
 
 		// Get the sprite.
-		var _pug = game.add.sprite(i*30, 0, 'pug');
+		var _pug = game.add.sprite(80, 0, 'pug');
 
 		// Enable pug BOX2D physics.
 		game.physics.box2d.enable(_pug);
@@ -41,10 +47,15 @@ function create() {
 		_pug.body.restitution = PUGS_RESTITUTION;
 
 		// set pug-trampoline collision callbacks
-		for(var j = 0; j < trampolinesGroup.trampolines.length; j++){
+		for(var j = 0; j < trampolinesGroup.length; j++){
 			var _trampoline = trampolinesGroup.trampolines[j];
-
 			_pug.body.setBodyContactCallback(_trampoline.sprite, _trampoline.pugTrampolineContactCallback, _trampoline);
+		}
+
+		for(var j = 0; j < goalsGroup.length; j++) {
+			var goal = goalsGroup.goals[j];
+			_pug.body.setBodyContactCallback(goal.sprite, goal.pugGoalContactCallback, goal);
+
 		}
 
 		// Add it to pugs array (group).

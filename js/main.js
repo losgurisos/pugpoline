@@ -14,4 +14,6 @@ var trampolineLifeTimer;
 // Goals group object (GoalsGroup)
 var goalsGroup;
 
+var rightWall;
+
 
