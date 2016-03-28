@@ -67,7 +67,6 @@ function Trampoline (maxPosibleHits) {
 		// Hide all animations playing.
 		hideAnimations();
 
-		console.log(this.sprite.body);
 	}
 
 	// Hide all trampoline animations.
@@ -80,6 +79,51 @@ function Trampoline (maxPosibleHits) {
 			_bounceAnimations[i].up.visible = false;
 		}
 	}
+
+	this.drawTrampoline = function (beginningTraceInput, endingTraceInput) {
+
+		// Get the angle between beginning and ending inputs in Radians.
+		var angleInRadians = Phaser.Point.angle(beginningTraceInput, endingTraceInput);
+
+		// Converted to degrees.
+		var angleInDegrees = 180 * angleInRadians / Math.PI - 180;
+
+		// Set angle (beginning-ending's angle).
+		this.sprite.body.angle = angleInDegrees;
+
+		// Is a right-to-left trace?
+		this.rightToLeft = beginningTraceInput.x > endingTraceInput.x;
+
+		// Get trace distance.
+		var traceDistance = Phaser.Point.distance(beginningTraceInput, endingTraceInput);
+
+		// Scale it to beginning-ending distance (if this.rightToLeft true, vertical scale negative to vertically invert the sprite);
+		this.sprite.scale.setTo(traceDistance/100, this.rightToLeft ? -1 : 1);
+
+		// Setting trampoline new position
+		this.setPosition( beginningTraceInput, endingTraceInput);
+
+		// Make sprite visible
+		this.sprite.visible = true;
+
+		// Set body as a line.
+		this.sprite.body.setRectangleFromSprite({width: traceDistance - 50, height:1});
+
+		// pre pug collision body
+		// Todo: Set callbacks one time in create method.
+		this.preContactSensor = this.sprite.body.addRectangle( traceDistance - 50, 15,0,0);
+		this.preContactSensor.SetSensor(true);
+		for(var i = 0; i < pugsGroup.length; i++){
+			pugsGroup[i].body.setFixtureContactCallback(this.preContactSensor, this.preContactSensorCallback, this);
+		}
+
+		// Disable to use it until lifetime end callback
+		this.enabledToUseIt = false;
+
+		// Add lifetime to the trampoline
+		trampolineLifeTimer.add(TRAMPOLINE_LIFETIME_IN_SECONDS * Phaser.Timer.SECOND, trampolineLifeTimerCallback, this);
+		trampolineLifeTimer.start();
+	};
 
 
 	// Set trampoline position with the user inputs.
@@ -101,7 +145,7 @@ function Trampoline (maxPosibleHits) {
 			this.leftPoint = endingTracePoint;
 			this.rightPoint = beginningTracePoint;
 		}
-	}
+	};
 
 	// Start the bounce animation.
 	this.startBounceAnimation = function (collisionPoint) {
