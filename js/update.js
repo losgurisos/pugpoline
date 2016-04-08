@@ -2,7 +2,7 @@
 // The beginning's input of the trampoline's trace creation.
 var beginningTraceInput = null;
 
-function update() { 
+function update() {
 
 	// User touch or click the screen and starts the trampoline trace.
 	if (game.input.activePointer.isDown && !beginningTraceInput){
@@ -10,15 +10,14 @@ function update() {
 		// Save input until the user ends the trace.
 		beginningTraceInput = new Phaser.Point( game.input.x, game.input.y)
 
-
-	// User end the trampoline trace.
 	} else if (game.input.activePointer.isUp && beginningTraceInput){
-
+		// User end the trampoline trace.
 		try{
 			// get first enabled trampoline and show it if exists
 			trampolinesGroup.getFirstEnabledTrampoline()
 					.drawTrampoline(beginningTraceInput, new Phaser.Point(game.input.x, game.input.y));
 		} catch(e){
+			console.log('There are no trampoline available!')
 			// do nothing.
 		}
 
@@ -32,10 +31,10 @@ function update() {
 		var _pugBody = pugsGroup[i].body;
 
 		if (_pugBody.y > 630){
-           	_pugBody.x = Math.random() * 800;
-            _pugBody.y = Math.random() * -200;
-            _pugBody.setZeroVelocity();
-   		}
+			_pugBody.x = Math.random() * 800 - SCREEN_OFFSET_RIGHT - 50;
+			_pugBody.y = - 30;
+			_pugBody.setZeroVelocity();
+		}
 	}
 }
 

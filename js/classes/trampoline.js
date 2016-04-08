@@ -165,14 +165,7 @@ function Trampoline (maxPosibleHits) {
 
 		// Play down anim.
 		anims.down.play('show');
-	}
-	this.pugTrampolinePresolveCallback = function (pug, trampoline, fixture1, fixture2, begin, contact) {
-	console.log(fixture2)
-	    pug.sensor = true
-	}
-	this.pugTrampolinePostsolveCallback = function (pug, trampoline, fixture1, fixture2, begin, contact) {
-
-	}
+	};
 
 	function getVerticalPugCollisionOnTrampoline (pug_x) {
 		// Getting vertical difference between left point
@@ -189,8 +182,8 @@ function Trampoline (maxPosibleHits) {
 
 		if(pug.velocity.y < 0) return;
 
-		var _horizontalAnimAdjusting = this.bounceAnimationWidth/2;
-		var _verticalAnimAdjusting = this.bounceAnimationHeight/2;
+		//var _horizontalAnimAdjusting = this.bounceAnimationWidth/2;
+		//var _verticalAnimAdjusting = this.bounceAnimationHeight/2;
 
 		// this.leftPoint.y - Math.tan((angle + 180) * Math.PI / 180) * (pug.x - this.leftPoint.x) - this.bounceAnimations[0].down.height/2 ;
 

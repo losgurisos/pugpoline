@@ -2,26 +2,34 @@
 function Goal (x, y , sprite) {
 
     // Phaser sprite object.
-    this.sprite;
+    this.sprite = null;
 
     function init(){
 
-        this.sprite = game.add.sprite(x, y , sprite || null);
+        var _sprite = game.add.sprite(0, 0 , sprite || null)
 
         // Enable pug BOX2D physics.
-        game.physics.box2d.enable(this.sprite);
+        game.physics.box2d.enable(_sprite);
 
         // Set body as static.
-        this.sprite.body.static = true;
+        _sprite.body.static = true;
+
+        //_sprite.body.SetSensor(true);
+
+        _sprite.body.setRectangle(GOALS_WIDTH, GOALS_HEIGHT, x, y).SetSensor(true);
+
+        this.sprite = _sprite;
 
     }
 
     this.pugGoalContactCallback = function(pug, goal, fixture1, fixture2, begin, contact) {
         if(begin)
-            console.log('golón.')
-    }
+            score.AddScore();
+
+        pug.velocity.x += 10000;
+    };
 
     // Init goal phaser object.
-    init.apply(this)
+    init.call(this)
 
 }
