@@ -25,17 +25,16 @@ function update() {
 		beginningTraceInput = null;
 	}
 
-	// reset pugs's Y position if reach the bottom.
-	for(var i = 0; i < pugsGroup.length; i++){
+	pugsGroup.getPugs().forEach(function(pug){
+		var pugBody = pug.body;
 
-		var _pugBody = pugsGroup[i].body;
-
-		if (_pugBody.y > 630){
-			_pugBody.x = Math.random() * 800 - SCREEN_OFFSET_RIGHT - 50;
-			_pugBody.y = - 30;
-			_pugBody.setZeroVelocity();
+		if (pugBody.y > 630){
+			pugBody.x = 0;//Math.random() * 800 - SCREEN_OFFSET_RIGHT - 50;
+			pugBody.y = - 30;
+			pugBody.setZeroVelocity();
+			pugBody.velocity.x = 400 * Math.random();
 		}
-	}
+	});
 }
 
 // The callback after the lifetime trampoline ends.

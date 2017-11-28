@@ -54,8 +54,8 @@ function Trampoline (maxPosibleHits) {
 
 	// Hide trampoline from screen and make it usable again.
 	this.remove = function() {
-	
-		// remove body from game.	
+
+		// remove body from game.
 		this.sprite.body.removeFromWorld();
 
 		// make sprite not visible.
@@ -107,11 +107,11 @@ function Trampoline (maxPosibleHits) {
 		this.sprite.visible = true;
 
 		// Set body as a line.
-		this.sprite.body.setRectangleFromSprite({width: traceDistance - 50, height:1});
+		this.sprite.body.setRectangleFromSprite({width: traceDistance, height:1});
 
 		// pre pug collision body
 		// Todo: Set callbacks one time in create method.
-		this.preContactSensor = this.sprite.body.addRectangle( traceDistance - 50, 15,0,0);
+		this.preContactSensor = this.sprite.body.addRectangle( traceDistance, 15,0,0);
 		this.preContactSensor.SetSensor(true);
 		for(var i = 0; i < pugsGroup.length; i++){
 			pugsGroup[i].body.setFixtureContactCallback(this.preContactSensor, this.preContactSensorCallback, this);
@@ -156,7 +156,7 @@ function Trampoline (maxPosibleHits) {
 		// Set down anim position.
 		anims.down.x = collisionPoint.x;
 		anims.down.y = collisionPoint.y;
-		
+
 		// Set down anim angle.
 		anims.down.angle = this.rightToLeft ? (this.sprite.angle) + 180  : this.sprite.angle;
 
@@ -171,7 +171,9 @@ function Trampoline (maxPosibleHits) {
 		// Getting vertical difference between left point
 		// and pug-trampoline's body collision (Thales)
 		// and subsctracted from trampoline leftPoint.y.
-	    return _this.leftPoint.y - (pug_x - _this.leftPoint.x) * (_this.leftPoint.y - _this.rightPoint.y) / (_this.rightPoint.x - _this.leftPoint.x);
+		return _this.leftPoint.y - (pug_x - _this.leftPoint.x)
+				* (_this.leftPoint.y - _this.rightPoint.y)
+				/ (_this.rightPoint.x - _this.leftPoint.x);
 	}
 
 	// Pug-trampoline collision callback
@@ -188,6 +190,12 @@ function Trampoline (maxPosibleHits) {
 		// this.leftPoint.y - Math.tan((angle + 180) * Math.PI / 180) * (pug.x - this.leftPoint.x) - this.bounceAnimations[0].down.height/2 ;
 
 		// -- Getting pug's collision point with trampoline body. --
+		var distanceFromLeft = Phaser.Point.distance(pug, _this.leftPoint)
+		var distanceFromRight = Phaser.Point.distance(pug, _this.rightPoint)
+
+		// dont show if pug is close to trampoline borders
+		if(distanceFromLeft < TRAMPOLINE_BOUNCE_ANIMATION_OFFSET || distanceFromRight < TRAMPOLINE_BOUNCE_ANIMATION_OFFSET) return;
+
 
 		var _y = getVerticalPugCollisionOnTrampoline(pug.x);
 		// The horizontal collision is getted from the pug.
@@ -195,6 +203,7 @@ function Trampoline (maxPosibleHits) {
 
 		// Start bounce animation from the collision point.
 		this.startBounceAnimation(new Phaser.Point( _x , _y ));
+
 	}
 
 	// Callback after down anim is complete.
@@ -227,7 +236,7 @@ function Trampoline (maxPosibleHits) {
 
 	// Callback after up anim is complete.
 	function onCompleteUpAnimationCallback (upAnim) {
-		upAnim.visible = false 
+		upAnim.visible = false
 	}
 
 	// Get the first available pair of anims from the bounce anims custom pool.
@@ -237,7 +246,7 @@ function Trampoline (maxPosibleHits) {
 
 		for(var i = 0; i < bounceAnimations.length ; i++) {
 			// If the two, up and down anim are finished.
-			if(bounceAnimations[i].up.animations._anims.show.isFinished === true 
+			if(bounceAnimations[i].up.animations._anims.show.isFinished === true
 				&& bounceAnimations[i].down.animations._anims.show.isFinished === true)
 					return bounceAnimations[i];
 		}
@@ -308,7 +317,7 @@ function Trampoline (maxPosibleHits) {
 
 		// Create up bounce animations.
 		for(var i = 0; i < maxPosibleHits; i++) {
-			
+
 			// Create sprite.
 			var animUpSprite = game.add.sprite(150, 0, 'tramp_up');
 
@@ -333,4 +342,3 @@ function Trampoline (maxPosibleHits) {
 		}
 	}
 }
-

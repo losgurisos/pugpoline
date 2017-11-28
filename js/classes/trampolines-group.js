@@ -23,10 +23,16 @@ function TrampolinesGroup (trampolineQty, maxPugsQty) {
 		// All trampoline are already in the screen.
 		return null;
 	
-	}
+	};
 
 	this.length = function(){
         return this.trampolines.length;
     }.apply(this)
 
 }
+
+var method = TrampolinesGroup.prototype;
+
+method.getTrampolines = function(){
+	return this.trampolines.map(function(pug) {return pug.sprite;});
+};
