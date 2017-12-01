@@ -1,6 +1,7 @@
 
-function Goal (x, y , sprite) {
+function Goal (x, y , sprite, onScoreCb) {
 
+    onScoreCb = onScoreCb || function(){}
     // Phaser sprite object.
     this.sprite = null;
 
@@ -23,9 +24,7 @@ function Goal (x, y , sprite) {
     }
 
     this.pugGoalContactCallback = function(pug, goal, fixture1, fixture2, begin, contact) {
-        if(begin)
-            score.AddScore();
-
+        if(begin) onScoreCb();
         pug.velocity.x += 10000;
     };
 

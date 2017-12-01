@@ -273,6 +273,8 @@ function Trampoline (maxPosibleHits) {
 		// Starts invisible.
 		_this.sprite.visible = false;
 
+		_this.sprite.body.restitution = TRAMPOLINE_RESTITUTION;
+
 	}
 
 	// Create down anims.

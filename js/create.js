@@ -1,6 +1,6 @@
 
 function create() {
-	
+
 	if(DISABLE_LOGS) {
 		// Deactivate logs.
 		console.log = function(){}
@@ -13,7 +13,7 @@ function create() {
 	game.stage.backgroundColor = BACKGROUND_COLOR;
 
 	// Set config gravity.
-	game.physics.box2d.gravity.y = GAME_GRAVITY;
+	game.physics.box2d.gravity.y = GAME_STARTING_GRAVITY;
 
 	// Set config friction.
 	game.physics.box2d.friction = GAME_FRICTION;
@@ -21,12 +21,16 @@ function create() {
 	// Get TrampolinesGroup instance.
 	trampolinesGroup = new TrampolinesGroup(MAX_TRAMPOLINE_QTY, MAX_PUGS_QTY);
 
-	console.log(trampolinesGroup);
-
+	// Score
+	score = new Score();
+	var gravityFactor = NeverEnding.getNeverEndingFactor(GAME_STARTING_GRAVITY, GAME_ENDING_GRAVITY, GAME_GRAVITY_ACELERATION);
+	score.onScore(function(newScore){
+		var newGravity = gravityFactor.getValueFor(newScore)
+			if(true || DEBUG_MODE) console.log("new gravity:", newGravity)
+			game.physics.box2d.gravity.y = newGravity;
+	})
 	// Get GoalsGroup instance.
-	goalsGroup = new GoalsGroup(GOALS_QTY);
-
-	console.log(goalsGroup);
+	goalsGroup = new GoalsGroup(GOALS_QTY, score);
 
 	for(var i = 0; i < GOALS_QTY + 1; i++) {
 		//var rightWall = game.add.sprite(GAME_WIDTH-SCREEN_OFFSET_RIGHT, SCREEN_OFFSET_UP + i* GAME_HEIGHT/GOALS_QTY ,null )
@@ -45,9 +49,6 @@ function create() {
 	// Pugs
 	pugsGroup = new PugsGroup(MAX_PUGS_QTY);
 	console.log(pugsGroup)
-
-	// Score
-	score = new Score();
 
 	// Create the trampoline life timer object with autodestroy = false.
 	trampolineLifeTimer = game.time.create(false)
