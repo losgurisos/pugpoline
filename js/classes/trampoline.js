@@ -183,6 +183,9 @@ function Trampoline (maxPosibleHits) {
 		if(!begin) return;
 
 		if(pug.velocity.y < 0) return;
+		
+		// always get a good bounce, even when pug is falling very slow
+		pug.velocity.y += TRAMPOLINE_PUG_VELOCITY_INCREMENT;
 
 		//var _horizontalAnimAdjusting = this.bounceAnimationWidth/2;
 		//var _verticalAnimAdjusting = this.bounceAnimationHeight/2;
