@@ -20,4 +20,5 @@ var rightWalls = [];
 // Score
 var score;
 
-
+// trace particle emitter
+var traceParticleEmitter

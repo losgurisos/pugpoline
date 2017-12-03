@@ -12,6 +12,7 @@ const GAME_STARTING_GRAVITY   = 150;
 const GAME_ENDING_GRAVITY     = 3000;
 const GAME_GRAVITY_ACELERATION =  10;
 const GAME_FRICTION 						= 1.1;
+const GAME_SCORE_ACELERATION  = 5;
 
 /* Trampoline */
 const MAX_TRAMPOLINE_QTY					= 10;

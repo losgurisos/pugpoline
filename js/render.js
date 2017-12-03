@@ -11,7 +11,7 @@ function render() {
 
 
     }
-    game.debug.text( "SCORE: " + score.score , 100, 30 );
+    game.debug.text( "SCORE: " + score.shownScore , 100, 30 );
     for(var i = 0; i < goalsGroup.length + 1; i++){
 
         game.debug.body(rightWalls[i]);

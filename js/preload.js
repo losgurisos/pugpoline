@@ -7,5 +7,6 @@ function preload() {
 	game.load.spritesheet('tramp_up', 'assets/tramp_up.png', 70, 17, 6);
 	game.load.spritesheet('tramp_down', 'assets/tramp_down.png', 70, 25, 6)
 	game.load.image('trampoline', 'assets/trampoline.png', 800, 64, 15);
+	game.load.image('traceParticle', 'assets/blue.png');
 
 }

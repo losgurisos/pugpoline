@@ -48,9 +48,14 @@ function create() {
 
 	// Pugs
 	pugsGroup = new PugsGroup(MAX_PUGS_QTY);
-	console.log(pugsGroup)
 
 	// Create the trampoline life timer object with autodestroy = false.
 	trampolineLifeTimer = game.time.create(false)
+
+	traceParticleEmitter = game.add.emitter(0, 0, 100);
+	traceParticleEmitter.makeParticles('traceParticle');
+  traceParticleEmitter.gravity = 50;
+	traceParticleEmitter.setAlpha(0.3, 0.3);
+	traceParticleEmitter.setScale(0.00001,0.00001);
 
 }
