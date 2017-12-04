@@ -81,34 +81,39 @@ function Trampoline (maxPosibleHits) {
 	}
 
 	this.drawTrampoline = function (beginningTraceInput, endingTraceInput) {
-
-		// Get the angle between beginning and ending inputs in Radians.
-		var angleInRadians = Phaser.Point.angle(beginningTraceInput, endingTraceInput);
-
-		// Converted to degrees.
-		var angleInDegrees = 180 * angleInRadians / Math.PI - 180;
-
-		// Set angle (beginning-ending's angle).
-		this.sprite.body.angle = angleInDegrees;
-
-		// Is a right-to-left trace?
-		this.rightToLeft = beginningTraceInput.x > endingTraceInput.x;
-
 		// Get trace distance.
 		var traceDistance = Phaser.Point.distance(beginningTraceInput, endingTraceInput);
+		// dont draw trampoline if is shorter than minimum needed
+		if(traceDistance < minimumTrampolineLength) return;
+		// Get the angle between beginning and ending inputs in Radians.
+		var angleInRadians = Phaser.Point.angle(beginningTraceInput, endingTraceInput);
+		// Converted to degrees.
+		var angleInDegrees = 180 * angleInRadians / Math.PI;
+		// Set angle (beginning-ending's angle).
+		this.sprite.body.angle = angleInDegrees + 180;
+		// Is a right-to-left trace?
+		this.rightToLeft = beginningTraceInput.x > endingTraceInput.x;
+		this.upToDown = beginningTraceInput.y < endingTraceInput.y;
+		this.rigthToLeftFactor = this.rightToLeft ? -1: 1;
+		this.upToDownFactor = this.upToDown ? -1: 1;
 
+		// check if user make a tacer larger than permitted
+		if(traceDistance > maximumTrampolineLength){
+				var difference = traceDistance - maximumTrampolineLength;
+				// new trace distance
+				traceDistance = maximumTrampolineLength;
+				// set new restricted ending point
+				endingTraceInput.x -= Math.abs(Math.cos(angleInRadians)*difference) * this.rigthToLeftFactor;
+				endingTraceInput.y += Math.abs(Math.sin(angleInRadians)*difference) * this.upToDownFactor;
+		}
 		// Scale it to beginning-ending distance (if this.rightToLeft true, vertical scale negative to vertically invert the sprite);
 		this.sprite.scale.setTo(traceDistance/100, this.rightToLeft ? -1 : 1);
-
 		// Setting trampoline new position
 		this.setPosition( beginningTraceInput, endingTraceInput);
-
 		// Make sprite visible
 		this.sprite.visible = true;
-
 		// Set body as a line.
 		this.sprite.body.setRectangleFromSprite({width: traceDistance, height:1});
-
 		// pre pug collision body
 		// Todo: Set callbacks one time in create method.
 		this.preContactSensor = this.sprite.body.addRectangle( traceDistance, 15,0,0);
@@ -116,10 +121,8 @@ function Trampoline (maxPosibleHits) {
 		for(var i = 0; i < pugsGroup.length; i++){
 			pugsGroup[i].body.setFixtureContactCallback(this.preContactSensor, this.preContactSensorCallback, this);
 		}
-
 		// Disable to use it until lifetime end callback
 		this.enabledToUseIt = false;
-
 		// Add lifetime to the trampoline
 		trampolineLifeTimer.add(TRAMPOLINE_LIFETIME_IN_SECONDS * Phaser.Timer.SECOND, trampolineLifeTimerCallback, this);
 		trampolineLifeTimer.start();
@@ -183,7 +186,7 @@ function Trampoline (maxPosibleHits) {
 		if(!begin) return;
 
 		if(pug.velocity.y < 0) return;
-		
+
 		// always get a good bounce, even when pug is falling very slow
 		pug.velocity.y += TRAMPOLINE_PUG_VELOCITY_INCREMENT;
 

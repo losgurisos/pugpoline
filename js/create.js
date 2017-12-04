@@ -57,5 +57,6 @@ function create() {
   traceParticleEmitter.gravity = 50;
 	traceParticleEmitter.setAlpha(0.3, 0.3);
 	traceParticleEmitter.setScale(0.00001,0.00001);
+	traceParticleEmitter.blendMode = Phaser.blendModes.NORMAL
 
 }

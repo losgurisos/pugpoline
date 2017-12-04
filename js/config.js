@@ -6,8 +6,8 @@ const DEBUG_MODE							= false;
 const DISABLE_LOGS            = false;
 
 /* Game conf */
-const GAME_WIDTH 							= 640;
-const GAME_HEIGHT 						= 960;
+const GAME_WIDTH 							= 320;
+const GAME_HEIGHT 						= 480;
 const GAME_STARTING_GRAVITY   = 150;
 const GAME_ENDING_GRAVITY     = 3000;
 const GAME_GRAVITY_ACELERATION =  10;
@@ -15,11 +15,13 @@ const GAME_FRICTION 						= 1.1;
 const GAME_SCORE_ACELERATION  = 5;
 
 /* Trampoline */
-const MAX_TRAMPOLINE_QTY					= 10;
+const MAX_TRAMPOLINE_QTY					= 3;
 const TRAMPOLINE_LIFETIME_IN_SECONDS		= 3;
 const TRAMPOLINE_BOUNCE_ANIMATION_OFFSET = 30;
 const TRAMPOLINE_RESTITUTION = 1.3;
 const TRAMPOLINE_PUG_VELOCITY_INCREMENT = 10;
+const MINIMUM_TRAMPOLINE_LENGTH = 60;
+const MAXIMUM_TRAMPOLINE_LENGTH = 200;
 
 /* Pug */
 const MAX_PUGS_QTY							= 1;
