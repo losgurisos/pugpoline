@@ -1,7 +1,7 @@
 
-function Goal (x, y , sprite, onScoreCb) {
+function Goal (x, y , sprite, score) {
 
-    onScoreCb = onScoreCb || function(){}
+    score = score || function(){}
     // Phaser sprite objects.
     this.spritePlatform = null;
     this.spriteGoal = null;
@@ -35,7 +35,7 @@ function Goal (x, y , sprite, onScoreCb) {
     }
 
     this.pugGoalContactCallback = function(pug, goal, fixture1, fixture2, begin, contact) {
-        if(begin) onScoreCb();
+        if(begin) score();
         // TODO pug victory animation
     };
 

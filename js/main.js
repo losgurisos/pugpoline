@@ -16,6 +16,7 @@ var goalsGroup;
 
 // Walls
 var rightWalls = [];
+var leftWall;
 
 // Score
 var score;
@@ -25,3 +26,6 @@ var traceParticleEmitter
 // trampoline length live restrictions
 var minimumTrampolineLength = MINIMUM_TRAMPOLINE_LENGTH;
 var maximumTrampolineLength = MAXIMUM_TRAMPOLINE_LENGTH;
+
+// SpriteFactory
+var spriteFactory = new SpriteFactory();

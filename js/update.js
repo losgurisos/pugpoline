@@ -23,14 +23,13 @@ function update() {
 
 	} else if (game.input.activePointer.isUp && beginningTraceInput){
 		// User end the trampoline trace.
-		try{
+
 			// get first enabled trampoline and show it if exists
-			trampolinesGroup.getFirstEnabledTrampoline()
-					.drawTrampoline(beginningTraceInput, new Phaser.Point(game.input.x, game.input.y));
-		} catch(e){
+		var enabledTrampoline = trampolinesGroup.getFirstEnabledTrampoline()
+		if(enabledTrampoline)
+			enabledTrampoline.drawTrampoline(beginningTraceInput, new Phaser.Point(game.input.x, game.input.y));
+		else
 			console.log('There are no trampoline available!')
-			// do nothing.
-		}
 
 		// Destroy the trace beginning's input.
 		beginningTraceInput = null;
