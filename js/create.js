@@ -26,7 +26,7 @@ function create() {
 	var gravityFactor = NeverEnding.getNeverEndingFactor(GAME_STARTING_GRAVITY, GAME_ENDING_GRAVITY, GAME_GRAVITY_ACELERATION);
 	score.onScore(function(newScore){
 		var newGravity = gravityFactor.getValueFor(newScore)
-			if(true || DEBUG_MODE) console.log("new gravity:", newGravity)
+			if(DEBUG_MODE) console.log("new gravity:", newGravity)
 			game.physics.box2d.gravity.y = newGravity;
 	})
 	// Get GoalsGroup instance.

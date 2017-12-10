@@ -2,33 +2,44 @@
 function Goal (x, y , sprite, onScoreCb) {
 
     onScoreCb = onScoreCb || function(){}
-    // Phaser sprite object.
-    this.sprite = null;
+    // Phaser sprite objects.
+    this.spritePlatform = null;
+    this.spriteGoal = null;
 
     function init(){
-
-        var _sprite = game.add.sprite(0, 0 , sprite || null)
-
+        // CREATE PLATFORM
+        // Create phaser sprite
+        var _spritePlatform = game.add.sprite(0, 0 , sprite || null)
         // Enable pug BOX2D physics.
-        game.physics.box2d.enable(_sprite);
-
+        game.physics.box2d.enable(_spritePlatform);
         // Set body as static.
-        _sprite.body.static = true;
+        _spritePlatform.body.static = true;
+        // Create platform rectangle
+        _spritePlatform.body.setRectangle(GOALS_PLATFORM_WIDTH, GOALS_PLATFORM_HEIGHT, x, y);
+        // Set to Goal instance
+        this.spritePlatform = _spritePlatform;
 
-        //_sprite.body.SetSensor(true);
-
-        _sprite.body.setRectangle(GOALS_WIDTH, GOALS_HEIGHT, x, y).SetSensor(true);
-
-        this.sprite = _sprite;
+        // CREATE GOAL
+        // Create phaser sprite
+        var _spriteGoal = game.add.sprite(0, 0 , sprite || null)
+        // Enable pug BOX2D physics.
+        game.physics.box2d.enable(_spriteGoal);
+        // Set body as static.
+        _spriteGoal.body.static = true;
+        // Create platform rectangle
+        var goalPosition = GoalHelper.getGoalPositionFromPlatformPosition(x, y);
+        _spriteGoal.body.setRectangle(GOALS_WIDTH, GOALS_HEIGHT, goalPosition.x, goalPosition.y).SetSensor(true);
+        // Set to Goal instance
+        this.spriteGoal = _spriteGoal;
 
     }
 
     this.pugGoalContactCallback = function(pug, goal, fixture1, fixture2, begin, contact) {
         if(begin) onScoreCb();
-        pug.velocity.x += 10000;
+        // TODO pug victory animation
     };
 
-    // Init goal phaser object.
+    // Init goal phaser objects.
     init.call(this)
 
 }

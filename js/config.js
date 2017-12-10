@@ -2,7 +2,7 @@
 /** CONFIGURATION */
 
 /* Debug mode */
-const DEBUG_MODE							= false;
+const DEBUG_MODE							= true;
 const DISABLE_LOGS            = false;
 
 /* Game conf */
@@ -30,16 +30,18 @@ const PUGS_CIRCLE_BODY_SIZE					= 11;
 
 /* Goals */
 const GOALS_QTY                             = 2;
-const GOALS_HEIGHT                          = 150;
-const GOALS_WIDTH                           = 20;
+const GOALS_PLATFORM_HEIGHT                 = 50;
+const GOALS_PLATFORM_WIDTH                  = 90;
+const GOALS_HEIGHT                          = 10;
+const GOALS_WIDTH                           = 50;
 
 /* Walls */
 // Right walls
-const RIGHT_WALL_WIDTH                      = 40;
+const RIGHT_WALL_WIDTH                      = 1;
 
 
 /* Screen */
-const SCREEN_OFFSET_RIGHT                   = 20;
+const SCREEN_OFFSET_RIGHT                   = 0;
 const SCREEN_OFFSET_UP                      = 0;
 
 

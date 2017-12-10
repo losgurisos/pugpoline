@@ -36,7 +36,7 @@ function update() {
 		beginningTraceInput = null;
 	}
 
-	pugsGroup.getPugs().forEach(function(pug){
+	pugsGroup.forEach(function(pug){
 		var pugBody = pug.body;
 
 		if (pugBody.y > 630){
