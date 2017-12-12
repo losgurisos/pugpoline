@@ -27,17 +27,22 @@ function create() {
 	goalsGroup = new GoalsGroup(GOALS_QTY, score);
 
 	// Right wall
-	for(var i = 0; i < GOALS_QTY + 1; i++) {
-		var rightWall = phaserFactory.createRectangularStaticSprite({ width: RIGHT_WALL_WIDTH, height: GAME_HEIGHT / GOALS_QTY - GOALS_HEIGHT, x: GAME_WIDTH - SCREEN_OFFSET_RIGHT, y: SCREEN_OFFSET_UP + i * GAME_HEIGHT / GOALS_QTY })
+	for(var i = 0; i < GOALS_QTY; i++) {
+		var rightWall = phaserFactory.createRectangularStaticSprite({
+			width: RIGHT_WALL_WIDTH,
+			height: GAME_HEIGHT / GOALS_QTY - GOALS_HEIGHT - PUGS_CIRCLE_BODY_SIZE * 2,
+			x: GAME_WIDTH - SCREEN_OFFSET_RIGHT,
+			y: SCREEN_OFFSET_UP - (GAME_HEIGHT / GOALS_QTY - GOALS_HEIGHT)/2 - GOALS_PLATFORM_HEIGHT/2 - GOALS_HEIGHT/2  + i * GAME_HEIGHT / GOALS_QTY
+		})
 		rightWalls.push(rightWall);
 	}
 	// Left wall
-	leftWall = phaserFactory.createRectangularStaticSprite({width: LEFT_WALL_WIDTH, height: GAME_HEIGHT, x: -1, y: 0 })
-
+	leftWall = phaserFactory.createRectangularStaticSprite({width: LEFT_WALL_WIDTH, height: GAME_HEIGHT - DEATHLINE_VERTICAL_POSITION_FROM_BOTTOM - PUGS_CIRCLE_BODY_SIZE * 4 , x: 0, y: 0 })
 	// Starting platform
 	startingPlatform = phaserFactory.createRectangularStaticSprite({width: STARTING_PLATFORM_WIDTH, height: STARTING_PLATFORM_HEIGHT, y: STARTING_PLATFORM_VERTICAL_POSITION})
 	startingPugFallZone = phaserFactory.createRectangularStaticSprite({sensor: true, width: 30, height: 30, x: STARTING_PLATFORM_WIDTH + PUGS_CIRCLE_BODY_SIZE * 2 - 15, y: STARTING_PLATFORM_VERTICAL_POSITION - STARTING_PLATFORM_HEIGHT})
-
+	// Deathline
+	deathline = phaserFactory.createRectangularStaticSprite({width: GAME_WIDTH + PUGS_CIRCLE_BODY_SIZE * 2, height: 10, x: - PUGS_CIRCLE_BODY_SIZE, y: GAME_HEIGHT - DEATHLINE_VERTICAL_POSITION_FROM_BOTTOM, sensor: false});
 	// Pugs
 	pugsGroup = new PugsGroup(MAX_PUGS_QTY);
 

@@ -31,10 +31,7 @@ function TrampolinesGroup (trampolineQty, maxPugsQty) {
 
 	};
 
-	this.length = function(){
-        return this.trampolines.length;
-    }.apply(this)
-
+	this.length = this.trampolines.length;
 }
 
 var method = TrampolinesGroup.prototype;
@@ -73,4 +70,8 @@ method.onUpdate = function(){
 		// Destroy the trace beginning's input.
 		this.beginningTraceInput = null;
 	}
+}
+
+method.forEach = function (cb) {
+	this.trampolines.forEach(function(trampoline){cb(trampoline)})
 }

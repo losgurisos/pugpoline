@@ -17,8 +17,11 @@ var goalsGroup;
 // Walls
 var rightWalls = [];
 var leftWall;
+// starting objects
 var startingPlatform;
 var startingPugFallZone;
+// deathline
+var deathline;
 
 // Score
 var score;

@@ -3,18 +3,19 @@ function render() {
 
     if(DEBUG_MODE){
       game.debug.text( "SCORE: " + score.shownScore , 100, 30 );
-      for(var i = 0; i < goalsGroup.length + 1; i++){
+      for(var i = 0; i < goalsGroup.length; i++){
 
           game.debug.body(rightWalls[i]);
       }
-      game.debug.body(leftWall)
-      game.debug.body(startingPlatform)
+      game.debug.body(leftWall);
+      game.debug.body(startingPlatform);
+      game.debug.body(deathline);
       pugsGroup.forEach(function(pug){
           game.debug.body(pug.getSprite())
       })
-      for(var i = 0; i < goalsGroup.length; i++){
-          game.debug.body(goalsGroup.goals[i].spriteGoal);
-          game.debug.body(goalsGroup.goals[i].spritePlatform);
-      }
+      goalsGroup.forEach(function(goal){
+          game.debug.body(goal.getSprite());
+          game.debug.body(goal.getSpritePlatform());
+      })
     }
 }

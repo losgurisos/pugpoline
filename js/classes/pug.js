@@ -30,6 +30,7 @@ function Pug (){
     }
 
     this.getBody().setBodyContactCallback(startingPugFallZone, this.changeState.bind(this, Pug.STATES.FALLING));
+    this.getBody().setBodyContactCallback(deathline, this.changeState.bind(this, Pug.STATES.SWIMMING));
 
     // starts walking
     this.changeState(Pug.STATES.WALKING)
@@ -37,8 +38,9 @@ function Pug (){
 
 var method = Pug.prototype;
 
-Pug.method("changeState", function(newState){
+method.changeState = function(newState){
   this.state = newState;
+  this.onUpdateForState = function(){};
   switch (newState) {
     case Pug.STATES.IDLE:
       this.getBody().velocity.x = 0;
@@ -49,32 +51,42 @@ Pug.method("changeState", function(newState){
       this.getBody().velocity.x = PUGS_STARTING_WALKING_SPEED;
       this.getBody().restitution = 0;
       this.getBody().rotation = 0;
+      this.onUpdateForState = function(){
+        this.getBody().rotation = 0; // avoid rolling
+        this.getBody().velocity.x = PUGS_STARTING_WALKING_SPEED; // keep moving right
+      }
       break;
     case Pug.STATES.FALLING:
       this.getBody().restitution = PUGS_RESTITUTION;
       break;
     case Pug.STATES.SWIMMING:
-      // TODO
       this.getBody().velocity.x = PUGS_STARTING_WALKING_SPEED;
+      this.getBody().velocity.y = 0;
       this.getBody().restitution = 0;
+      this.getBody().rotation = 0;
+      // get random direction
+      var toTheRight = true;//Math.random() >= 0.5;
+      this.onUpdateForState = function(){
+        this.getBody().rotation = 0; // avoid rolling
+        this.getBody().velocity.x = (toTheRight ? 1: -1) * PUGS_STARTING_WALKING_SPEED; // keep moving right
+      }
   }
-})
-
-Pug.method("isWalking", function(){
+}
+method.isWalking = function(){
   return this.getState() == Pug.STATES.WALKING;
-})
+}
 
-Pug.method("getState", function(){
+method.getState = function(){
   return this.state;
-})
+}
 
-Pug.method("getBody", function(){
-    return this.getSprite().body || false;
-})
+method.getBody = function(){
+  return this.getSprite().body || false;
+}
 
-Pug.method("getSprite", function(){
-    return this.spritePug || false;
-})
+method.getSprite = function(){
+  return this.spritePug || false;
+}
 
 Pug.STATES = {
   IDLE: 0,
@@ -84,10 +96,7 @@ Pug.STATES = {
 }
 
 method.onUpdate = function(){
-  if(this.isWalking()){
-    this.getBody().rotation = 0; // avoid rolling
-    this.getBody().velocity.x = PUGS_STARTING_WALKING_SPEED; // keep moving right
-  }
+  this.onUpdateForState();
 }
 
 method.setCollisionCallbacks = function(group, callbackName){

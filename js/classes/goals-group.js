@@ -16,3 +16,9 @@ function GoalsGroup (goalsQty, score) {
 
     this.length = this.goals.length;
 }
+
+var method = GoalsGroup.prototype;
+
+method.forEach = function (cb) {
+	this.goals.forEach(function(goal){cb(goal)})
+}

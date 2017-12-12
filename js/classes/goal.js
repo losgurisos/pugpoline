@@ -43,3 +43,12 @@ function Goal (x, y , sprite, score) {
     init.call(this)
 
 }
+
+var method = Goal.prototype;
+
+method.getSprite = function(){
+  return this.spriteGoal;
+}
+method.getSpritePlatform = function(){
+  return this.spritePlatform;
+}
