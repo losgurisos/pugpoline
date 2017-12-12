@@ -97,7 +97,7 @@ function Trampoline (maxPosibleHits) {
 		this.rigthToLeftFactor = this.rightToLeft ? -1: 1;
 		this.upToDownFactor = this.upToDown ? -1: 1;
 
-		// check if user make a tacer larger than permitted
+		// check if user make a trace larger than permitted and makes shorter
 		if(traceDistance > maximumTrampolineLength){
 				var difference = traceDistance - maximumTrampolineLength;
 				// new trace distance

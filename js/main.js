@@ -17,6 +17,8 @@ var goalsGroup;
 // Walls
 var rightWalls = [];
 var leftWall;
+var startingPlatform;
+var startingPugFallZone;
 
 // Score
 var score;
@@ -28,4 +30,4 @@ var minimumTrampolineLength = MINIMUM_TRAMPOLINE_LENGTH;
 var maximumTrampolineLength = MAXIMUM_TRAMPOLINE_LENGTH;
 
 // SpriteFactory
-var spriteFactory = new SpriteFactory();
+var phaserFactory = new PhaserFactory();

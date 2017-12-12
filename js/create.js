@@ -28,23 +28,21 @@ function create() {
 
 	// Right wall
 	for(var i = 0; i < GOALS_QTY + 1; i++) {
-		var rightWall = spriteFactory.createRectangularStaticSprite(null, RIGHT_WALL_WIDTH, GAME_HEIGHT / GOALS_QTY - GOALS_HEIGHT, GAME_WIDTH - SCREEN_OFFSET_RIGHT, SCREEN_OFFSET_UP + i * GAME_HEIGHT / GOALS_QTY);
+		var rightWall = phaserFactory.createRectangularStaticSprite({ width: RIGHT_WALL_WIDTH, height: GAME_HEIGHT / GOALS_QTY - GOALS_HEIGHT, x: GAME_WIDTH - SCREEN_OFFSET_RIGHT, y: SCREEN_OFFSET_UP + i * GAME_HEIGHT / GOALS_QTY })
 		rightWalls.push(rightWall);
 	}
 	// Left wall
-	leftWall = spriteFactory.createRectangularStaticSprite(null, LEFT_WALL_WIDTH, GAME_HEIGHT, 0, 0);
+	leftWall = phaserFactory.createRectangularStaticSprite({width: LEFT_WALL_WIDTH, height: GAME_HEIGHT, x: -1, y: 0 })
+
+	// Starting platform
+	startingPlatform = phaserFactory.createRectangularStaticSprite({width: STARTING_PLATFORM_WIDTH, height: STARTING_PLATFORM_HEIGHT, y: STARTING_PLATFORM_VERTICAL_POSITION})
+	startingPugFallZone = phaserFactory.createRectangularStaticSprite({sensor: true, width: 30, height: 30, x: STARTING_PLATFORM_WIDTH + PUGS_CIRCLE_BODY_SIZE * 2 - 15, y: STARTING_PLATFORM_VERTICAL_POSITION - STARTING_PLATFORM_HEIGHT})
 
 	// Pugs
 	pugsGroup = new PugsGroup(MAX_PUGS_QTY);
 
 	// Create the trampoline life timer object with autodestroy = false.
 	trampolineLifeTimer = game.time.create(false)
-
-	traceParticleEmitter = game.add.emitter(0, 0, 100);
-	traceParticleEmitter.makeParticles('traceParticle');
-  traceParticleEmitter.gravity = 50;
-	traceParticleEmitter.setAlpha(0.3, 0.3);
-	traceParticleEmitter.setScale(0.00001,0.00001);
-	traceParticleEmitter.blendMode = Phaser.blendModes.NORMAL
-
+	// Create trampoline trace particle emitter
+	traceParticleEmitter = phaserFactory.createEmitter({sprite: 'traceParticle', minAlpha: 0.3, maxAlpha: 0.3, scaleWidth: 0.00001, scaleHeight: 0.00001});
 }

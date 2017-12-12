@@ -8,6 +8,10 @@ function render() {
           game.debug.body(rightWalls[i]);
       }
       game.debug.body(leftWall)
+      game.debug.body(startingPlatform)
+      pugsGroup.forEach(function(pug){
+          game.debug.body(pug.getSprite())
+      })
       for(var i = 0; i < goalsGroup.length; i++){
           game.debug.body(goalsGroup.goals[i].spriteGoal);
           game.debug.body(goalsGroup.goals[i].spritePlatform);
