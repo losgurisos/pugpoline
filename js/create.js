@@ -9,6 +9,9 @@ function create() {
 	game.physics.startSystem(Phaser.Physics.BOX2D);
 	// Set stage background color.
 	game.stage.backgroundColor = BACKGROUND_COLOR;
+	game.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, "background_1");
+	game.add.tileSprite(0, GAME_HEIGHT - DEATHLINE_VERTICAL_POSITION_FROM_BOTTOM - 60, GAME_WIDTH, GAME_HEIGHT, "water");
+	game.add.tileSprite(0, STARTING_PLATFORM_VERTICAL_POSITION, STARTING_PLATFORM_WIDTH, STARTING_PLATFORM_HEIGHT, "platform");
 	// Set config gravity.
 	game.physics.box2d.gravity.y = GAME_STARTING_GRAVITY;
 	// Set config friction.

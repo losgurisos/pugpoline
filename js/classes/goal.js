@@ -1,5 +1,5 @@
 
-function Goal (x, y , sprite, score) {
+function Goal (x, y , assetPlatform, assetGoal, score) {
 
     score = score || function(){}
     // Phaser sprite objects.
@@ -9,26 +9,26 @@ function Goal (x, y , sprite, score) {
     function init(){
         // CREATE PLATFORM
         // Create phaser sprite
-        var _spritePlatform = game.add.sprite(0, 0 , sprite || null)
+        var _spritePlatform = game.add.sprite(x, y , assetPlatform || null)
         // Enable pug BOX2D physics.
         game.physics.box2d.enable(_spritePlatform);
         // Set body as static.
         _spritePlatform.body.static = true;
         // Create platform rectangle
-        _spritePlatform.body.setRectangle(GOALS_PLATFORM_WIDTH, GOALS_PLATFORM_HEIGHT, x, y);
+        _spritePlatform.body.setRectangle(GOALS_PLATFORM_WIDTH, GOALS_PLATFORM_HEIGHT, 0, 0);
         // Set to Goal instance
         this.spritePlatform = _spritePlatform;
 
         // CREATE GOAL
+        var goalPosition = GoalHelper.getGoalPositionFromPlatformPosition(x, y);
         // Create phaser sprite
-        var _spriteGoal = game.add.sprite(0, 0 , sprite || null)
+        var _spriteGoal = game.add.sprite(goalPosition.x, goalPosition.y , assetGoal || null)
         // Enable pug BOX2D physics.
         game.physics.box2d.enable(_spriteGoal);
         // Set body as static.
         _spriteGoal.body.static = true;
         // Create platform rectangle
-        var goalPosition = GoalHelper.getGoalPositionFromPlatformPosition(x, y);
-        _spriteGoal.body.setRectangle(GOALS_WIDTH, GOALS_HEIGHT, goalPosition.x, goalPosition.y).SetSensor(true);
+        _spriteGoal.body.setRectangle(GOALS_WIDTH, GOALS_HEIGHT, 0, 0).SetSensor(true);
         // Set to Goal instance
         this.spriteGoal = _spriteGoal;
 

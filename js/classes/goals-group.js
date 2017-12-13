@@ -11,7 +11,7 @@ function GoalsGroup (goalsQty, score) {
 
     // Initialize goals sprites
     for(var i = 0; i < goalsQty; i++){
-        this.goals.push(new Goal(GAME_WIDTH - SCREEN_OFFSET_RIGHT, GAME_HEIGHT/goalsQty*i + GAME_HEIGHT/goalsQty/2 ,null, onScore));
+        this.goals.push(new Goal(GAME_WIDTH - SCREEN_OFFSET_RIGHT, GAME_HEIGHT/goalsQty*i + GAME_HEIGHT/goalsQty/2 ,"platform", "goal", onScore));
     }
 
     this.length = this.goals.length;

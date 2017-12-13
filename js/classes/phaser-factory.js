@@ -8,10 +8,10 @@ var PhaserFactory = function() {
       y: 0,
       sensor: false
     }, options)
-    var s = game.add.sprite(0, 0, options.sprite);
+    var s = game.add.sprite(options.x+ options.width/2, options.y + options.height/2, options.sprite);
     game.physics.box2d.enable(s)
     s.body.static = true;
-    s.body.setRectangle(options.width, options.height, options.x + options.width/2, options.y + options.height/2).SetSensor(options.sensor);
+    s.body.setRectangle(options.width, options.height, 0, 0).SetSensor(options.sensor);
     return s;
   }
   this.createEmitter = function(options){
@@ -42,5 +42,22 @@ var PhaserFactory = function() {
         traceParticleEmitter.start(true, 500, null, 3);
     }
     return traceParticleEmitter;
+  }
+  this.createCircularSprite = function(options){
+    options = ObjectHelper.merge({
+      sprite: null,
+      radius: 10,
+      x: -15,
+      y: -15,
+      sensor: false,
+      visible: true
+    }, options)
+    var s = game.add.sprite(0, 0, options.sprite);
+    game.physics.box2d.enable(s);
+    s.body.x = options.x;
+    s.body.y = options.y;
+    s.body.setCircle(options.radius);
+    s.visible = options.visible;
+    return s;
   }
 }

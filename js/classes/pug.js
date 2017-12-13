@@ -4,19 +4,9 @@
 
 function Pug (){
 
-    this.spritePug = game.add.sprite(15, 53, 'pug');
-
-    this.state = Pug.STATES.IDLE;
-
-    // Enable pug BOX2D physics.
-    game.physics.box2d.enable(this.spritePug);
-
-    // Starts circle body.
-    this.spritePug.body.setCircle(PUGS_CIRCLE_BODY_SIZE);
-    //this.getBody().setRectangle(30, 20)
-
-    // Start without restitution
-    this.spritePug.body.restitution = 0;
+    this.sprites = {};
+    this.initializeSprite();
+    this.initializeAnimations();
 
     // set pug-trampoline collision callbacks
     for(var j = 0; j < trampolinesGroup.length; j++){
@@ -38,6 +28,16 @@ function Pug (){
 
 var method = Pug.prototype;
 
+method.initializeSprite = function(){
+  this.spritePug = phaserFactory.createCircularSprite({sprite: "pug_walk", radius: PUGS_CIRCLE_BODY_SIZE, x: 15, y: STARTING_PLATFORM_VERTICAL_POSITION});
+}
+
+method.initializeAnimations = function(){
+  this.getSprite().animations.add('walk');
+  this.getSprite().animations.add('swim');
+  console.log()
+}
+
 method.changeState = function(newState){
   this.state = newState;
   this.onUpdateForState = function(){};
@@ -48,6 +48,8 @@ method.changeState = function(newState){
       this.getBody().restitution = 0;
       break;
     case Pug.STATES.WALKING:
+      this.getSprite().loadTexture('pug_walk', 0, false);
+      this.getSprite().animations.play('walk', 20, true);
       this.getBody().velocity.x = PUGS_STARTING_WALKING_SPEED;
       this.getBody().restitution = 0;
       this.getBody().rotation = 0;
@@ -60,15 +62,21 @@ method.changeState = function(newState){
       this.getBody().restitution = PUGS_RESTITUTION;
       break;
     case Pug.STATES.SWIMMING:
+      this.getSprite().loadTexture('pug_swim', 0, false);
+      this.getSprite().animations.play('swim', 20, true);
       this.getBody().velocity.x = PUGS_STARTING_WALKING_SPEED;
       this.getBody().velocity.y = 0;
       this.getBody().restitution = 0;
       this.getBody().rotation = 0;
       // get random direction
-      var toTheRight = true;//Math.random() >= 0.5;
+      var toTheRight = Math.random() >= 0.5? 1: 1;;
+      // Invert scale.x to flip left/right
+      this.getSprite().scale.x *= toTheRight;
+      // Invert scale.y to flip up/down
+      //this.getSprite().scale.y *= toTheRight;
       this.onUpdateForState = function(){
         this.getBody().rotation = 0; // avoid rolling
-        this.getBody().velocity.x = (toTheRight ? 1: -1) * PUGS_STARTING_WALKING_SPEED; // keep moving right
+        this.getBody().velocity.x = toTheRight * PUGS_STARTING_WALKING_SPEED; // keep moving right
       }
   }
 }
